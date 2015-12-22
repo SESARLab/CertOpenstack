@@ -1,0 +1,22 @@
+#!/bin/sh
+
+#Scrivo le stringhe nei volumi
+echo 'Stringa in volume chiaro' > /dev/vdb
+echo 'Stringa in volume cifrato' > /dev/vdc
+
+# Esecuzione
+strings /dev/vdb | grep "Stringa" 1> stringa_in_chiaro
+strings /dev/vdc | grep "Stringa" 1> stringa_in_cifrato
+
+echo -e "\n--- Read Strings inside VM --- " >> outputDD.txt
+echo "Found Strings in CLEAN Volume: " >> outputDD.txt
+cat stringa_in_chiaro >> outputDD.txt
+echo -e "\nFound Strings in LUKS Volume : " >> outputDD.txt
+cat stringa_in_cifrato >> outputDD.txt
+
+rm stringa_in_chiaro
+rm stringa_in_cifrato
+
+chmod 777 outputDD.txt
+
+exit

@@ -1,0 +1,52 @@
+#!/bin/sh
+
+#TEMPOESECUZIONE
+
+
+echo -e "--- TEST write ---" > outputDD.txt
+echo "dd test on CLEN volume"
+echo '--- CLEAN ---' >> outputDD.txt
+time dd if=/dev/urandom of=CLEAN bs=512 count=DIMCHIARO >> outputDD.txt 2>&1
+echo "dd test on LUKS volume"
+echo -e '\n--- LUKS ---' >> outputDD.txt
+time dd if=/dev/urandom of=CIPHER bs=512 count=DIMCIFRATO >> outputDD.txt 2>&1
+sleep 10
+
+
+echo 'Stringa in volume chiaro' > CLEAN
+echo 'Stringa in volume cifrato' > CIPHER
+
+#DOVRÒ aggiungere un secondo commento per decidere
+#se fare i test di lettura, x ora nn c'ho voglia.
+
+
+echo -e '\n\n--- TEST read ---' >> outputDD.txt
+echo -e '--- CLEN VOLUME ---' >> outputDD.txt
+time 2>> outputDD.txt strings CLEAN | grep "Stringa" 1> stringa_in_chiaro
+# VECCHIO --> time strings CLEAN | grep Stringa >> outputDD.txt 2>&1
+
+echo -e '\n--- LUKS volume ---' >> outputDD.txt 
+time 2>> outputDD.txt strings CIPHER | grep "Stringa" 1> stringa_in_cifrato
+# VECCHIO --> time strings CIPHER | grep Stringa >> outputDD.txt 2>&1
+
+#echo -e "\nLa stringa in chiaro è : "
+#cat stringa_in_chiaro
+
+#echo -e "\nLa stringa in cifrato è : "
+#cat stringa_in_cifrato
+
+echo -e "\nCopio le stringhe nel file..."
+
+echo -e "\n--- Stringhe lette --- " >> outputDD.txt
+echo "La stringa nel volume in chiaro : " >> outputDD.txt
+cat stringa_in_chiaro >> outputDD.txt
+echo -e "\nLa stringa nel volume cifrato : " >> outputDD.txt
+cat stringa_in_cifrato >> outputDD.txt
+
+rm stringa_in_chiaro
+rm stringa_in_cifrato
+
+chmod 777 outputDD.txt
+
+
+exit

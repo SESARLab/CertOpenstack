@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#Preparo il volume
+#sudo mkfs.ext4 CIPHER > outputDD.txt
+#sudo mkdir /mnt/Cifrato  
+#sudo mount CIPHER /mnt/Cifrato
+
+# Creo il file
+sudo echo 'Stringa in volume cifrato' > CIPHER #/mnt/Cifrato/File_di_prova.txt
+exit
